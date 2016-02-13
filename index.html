@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>My Email Lists</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	</head>
+
+	<style>
+		body {
+			padding-top: 80px;
+		}
+
+		.selected {
+			background-color: lightgray;
+		}
+	</style>
+
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">
+						Email list
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container" ng-app="emailApp">
+
+			<div class="row">
+				<div class="col-md-8" ng-controller="listCtrl">
+					<!--search bar-->
+					<div class="well well-sm">
+						<form class="form-inline">
+							<span class="glyphicon glyphicon-search"></span>
+							<input class="form-control" type="text" ng-model="searchText"
+								   placeholder="Search Key Words">
+							<select class="form-control" ng-model="searchColumn">
+								<option value="name" >Name</option>
+								<option value="email">Email</option>
+								<option value="birthdate">Birthdate</option>
+							</select>
+						</form>
+					</div>
+
+					<!--email list table-->
+					<table class="table table-bordered">
+						<tr>
+							<th>
+								#
+							</th>
+							<th>
+								Name
+								<span class="glyphicon glyphicon-chevron-up" ng-click="order = 'name'"></span>
+								<span class="glyphicon glyphicon-chevron-down" ng-click="order = '-name'"></span>
+							</th>
+							<th>
+								Email
+								<span class="glyphicon glyphicon-chevron-up" ng-click="order = 'email'"></span>
+								<span class="glyphicon glyphicon-chevron-down" ng-click="order = '-email'"></span>
+							</th>
+							<th>
+								Birthday
+								<span class="glyphicon glyphicon-chevron-up" ng-click="order = 'birthdate'"></span>
+								<span class="glyphicon glyphicon-chevron-down" ng-click="order = '-birthdate'"></span>
+							</th>
+						</tr>
+						<tr ng-repeat="person in filteredPerson = (contacts.persons |filter: mySearch | orderBy: order)"
+							ng-class="{selected: person.email == contacts.selectedPerson.email }"
+							ng-click="contacts.selectedPerson = person">
+							<td ng-bind="$index+1"></td>
+							<td ng-bind="person.name"></td>
+							<td ng-bind="person.email"></td>
+							<td ng-bind="person.birthdate | date: 'dd/MM/yyyy'"></td>
+						</tr>
+						<tr ng-show="filteredPerson.length == 0">
+							<td colspan="4" >
+								<div class="alert alert-info" >
+									<p class="text-center" >No results found for search term '{{ searchText }}'</p >
+								</div >
+							</td >
+						</tr>
+
+					</table>
+				</div>
+
+				<!--detail information-->
+				<div class="col-md-4" ng-controller="detailCtrl">
+					<div class="panel panel-default">
+						<div class="panel-heading"><b>Details</b>:<br> detail information will be displayed when you
+																 click a contact in the left table
+						</div>
+						<div class="panel-body">
+							<form>
+								<div class="form-group">
+									<label class="control-label col-sm-3">Name</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="contacts.selectedPerson.name">
+									</div>
+								</div>
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >Email</label >
+									<div class="col-sm-9" >
+										<input type="email"
+											   name="email"
+											   class="form-control"
+											   ng-model="contacts.selectedPerson.email"
+											   required />
+									</div >
+								</div >
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >Photo</label >
+									<div class="col-sm-9" >
+										<input type="text"
+											   class="form-control"
+											   name="photo"
+											   ng-model="contacts.selectedPerson.photo"
+												/>
+									</div >
+								</div >
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >Sex</label >
+									<div class="col-sm-9" >
+
+										<select name="sex"
+												class="form-control"
+												ng-model="contacts.selectedPerson.sex"
+												id="" >
+											<option value="M" >Male</option >
+											<option value="F" >Female</option >
+										</select >
+									</div >
+								</div >
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >Birthday</label >
+									<div class="col-sm-9" >
+										<input type="text"
+											   name="bday"
+											   class="form-control"
+											   ng-model="contacts.selectedPerson.birthdate"
+											   bs-datepicker
+												/>
+									</div >
+
+								</div >
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >Phone</label >
+									<div class="col-sm-9" >
+										<input type="tel"
+											   name="phone"
+											   class="form-control"
+											   ng-model="contacts.selectedPerson.phonenumber"
+												/>
+									</div >
+
+								</div >
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >Address</label >
+									<div class="col-sm-9" >
+										<input type="text"
+											   name="address"
+											   class="form-control"
+											   ng-model="contacts.selectedPerson.address"
+												/>
+									</div >
+
+								</div >
+
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" >City</label >
+									<div class="col-sm-9" >
+										<input type="text"
+											   name="city"
+											   class="form-control"
+											   ng-model="contacts.selectedPerson.city"
+												/>
+									</div >
+
+								</div >
+								<div class="form-group" >
+									<label class="col-md-3 control-label" >Country</label >
+									<div class="col-md-9" >
+										<input type="text"
+											   name="country"
+											   class="form-control"
+											   ng-model="contacts.selectedPerson.country"
+												/>
+									</div >
+
+								</div >
+								<div class="button">
+									<button class="btn btn-primary" type="submit">
+										Save
+									</button>
+
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/emailService.js"></script>
+		<script src="js/controllers/listController.js"></script>
+		<script src="js/controllers/detailController.js"></script>
+	</body>
+</html>
